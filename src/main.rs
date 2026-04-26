@@ -26,6 +26,7 @@ mod map;
 mod sokoban_state;
 mod victory_screen;
 
+/*
 fn window_conf() -> macroquad::conf::Conf {
     macroquad::conf::Conf {
         miniquad_conf: macroquad::prelude::Conf {
@@ -42,10 +43,9 @@ fn window_conf() -> macroquad::conf::Conf {
         update_on: Some(UpdateTrigger::default()),
         default_filter_mode: FilterMode::Nearest,
     }
-}
+}*/
 
-#[macroquad::main(window_conf)]
-async fn main() {
+fn main() {
     //make the necessary appstate instance to launch the program.
     let mut app_state = AppState::new(1);
     //if a save file exists then load it
