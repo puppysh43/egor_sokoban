@@ -1,21 +1,60 @@
 use crate::map::*;
 use crate::prelude::*;
-use macroquad::audio::*;
-use macroquad::prelude::*;
+use egor::math::IVec2;
 
-pub struct SokobanState {
-    pub texture_atlas: HashMap<String, Texture2D>,
-    pub sound_atlas: HashMap<String, Sound>,
+pub struct GameState {
     pub map: Map,
     pub player: IVec2,
     pub crates: HashMap<IVec2, Crate>,
     pub movecount: u32,
     pub moves: Vec<Move>,
-    pub game_state: GameState,
+    pub gamestage: GameStage,
+}
+impl GameState {
+    ///creates a new blank gamestate when starting up the program
+    pub fn new() -> Self {
+        GameState {
+            map: Map::new(),
+            player: IVec2::new(0, 0),
+            crates: HashMap::new(),
+            movecount: 0,
+            moves: Vec::new(),
+            gamestage: GameStage::Playing,
+        }
+    }
+    ///create a new gamestate from file.
+    pub fn from_file(path: String) -> Self {
+        let (map, player_spawn, crates) = read_data_from_string(path);
+        Self {
+            map,
+            player: player_spawn,
+            crates,
+            movecount: 0,
+            moves: Vec::new(),
+            gamestage: GameStage::Playing,
+        }
+    }
+    ///update the gamestate from a file
+    pub fn update_from_file(&mut self, path: String) {
+        let (new_map, new_player_spawn, new_crates) = read_data_from_string(path);
+        self.map = new_map;
+        self.player = new_player_spawn;
+        self.crates = new_crates;
+        self.movecount = 0;
+        self.moves.clear();
+        self.gamestage = GameStage::Playing;
+    }
+    ///unclear on the use of this one tbh
+    pub fn get_current_move(&self) -> Move {
+        Move::new(self.player.clone(), self.crates.clone())
+    }
+    pub fn archive_move(&mut self) {
+        self.moves.push(Move::new(self.player, self.crates.clone()));
+    }
 }
 
 #[derive(Copy, Debug, PartialEq, Clone)]
-pub enum GameState {
+pub enum GameStage {
     Playing,
     Quitting,
     Continuing,
@@ -35,49 +74,14 @@ impl Crate {
 pub struct Move {
     pub player: IVec2,
     pub crates: HashMap<IVec2, Crate>,
-    pub movecount: u32,
 }
 impl Move {
-    pub fn new(player: IVec2, crates: HashMap<IVec2, Crate>, movecount: u32) -> Self {
-        Self {
-            player,
-            crates,
-            movecount,
-        }
+    pub fn new(player: IVec2, crates: HashMap<IVec2, Crate>) -> Self {
+        Self { player, crates }
     }
 }
 
-impl SokobanState {
-    pub fn from_file(
-        path: String,
-        texture_atlas: HashMap<String, Texture2D>,
-        sound_atlas: HashMap<String, Sound>,
-    ) -> Self {
-        let (map, player_spawn, crates) = read_data_from_string(path);
-        Self {
-            texture_atlas,
-            sound_atlas,
-            map,
-            player: player_spawn,
-            crates,
-            movecount: 0,
-            moves: Vec::new(),
-            game_state: GameState::Playing,
-        }
-    }
-    pub fn update_from_file(&mut self, path: String) {
-        let (new_map, new_player_spawn, new_crates) = read_data_from_string(path);
-        self.map = new_map;
-        self.player = new_player_spawn;
-        self.crates = new_crates;
-        self.movecount = 0;
-        self.moves.clear();
-        self.game_state = GameState::Playing;
-    }
-    pub fn get_current_move(&self) -> Move {
-        Move::new(self.player.clone(), self.crates.clone(), self.movecount)
-    }
-}
+impl SokobanState {}
 use std::fs;
 fn read_data_from_string(path: String) -> (Map, IVec2, HashMap<IVec2, Crate>) {
     //get the raw string from file

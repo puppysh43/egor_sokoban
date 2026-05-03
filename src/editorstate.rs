@@ -1,6 +1,4 @@
 use crate::prelude::*;
-use macroquad::audio::*;
-use macroquad::prelude::*;
 ///This struct will hold all the data needed for the level editor
 #[derive(Clone, Debug)]
 pub struct EditorState {
@@ -14,24 +12,15 @@ pub struct EditorState {
     pub brush_type: BrushType,
     ///is the mouse enabled in the editor
     pub mouse_enabled: bool,
-    ///texture atlas
-    pub texture_atlas: HashMap<String, Texture2D>,
-    ///sound atlas
-    pub sound_atlas: HashMap<String, Sound>,
 }
 impl EditorState {
-    pub fn new(
-        texture_atlas: HashMap<String, Texture2D>,
-        sound_atlas: HashMap<String, Sound>,
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             map: EditorMap::new(),
             map_name: None,
             control_state: EditorControlState::Root,
             brush_type: BrushType::Floor,
             mouse_enabled: false,
-            texture_atlas,
-            sound_atlas,
         }
     }
 }
