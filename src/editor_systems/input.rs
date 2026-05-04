@@ -1,17 +1,16 @@
-use crate::editor_state::*;
 use crate::editor_systems::*;
-use crate::prelude::*;
-use macroquad::prelude::*;
+use crate::editorstate::EditorState;
+use egor::input::{Input, KeyCode};
 
-pub fn system(state: &mut EditorState) -> EditorMOI {
+pub fn system(state: &mut EditorState, input: &mut &Input) -> EditorMOI {
     match state.control_state {
         EditorControlState::Root => {
-            if is_key_pressed(KeyCode::Enter) || is_key_pressed(KeyCode::KpEnter) {
-                //press enter to start editing
+            if input.keys_pressed(&[KeyCode::Enter, KeyCode::NumpadEnter]) {
                 state.control_state = EditorControlState::Reticule(IVec2::new(0, 0));
                 return EditorMOI::None;
-            } else if is_key_down(KeyCode::LeftControl) && is_key_pressed(KeyCode::S) {
-                //use control s to try and save
+            } else if input.all_keys_pressed(&[KeyCode::ControlLeft, KeyCode::KeyS])
+                || input.all_keys_pressed(&[KeyCode::ControlRight, KeyCode::KeyS])
+            {
                 state.control_state = EditorControlState::Saving;
                 return EditorMOI::None;
             } else {
@@ -20,42 +19,35 @@ pub fn system(state: &mut EditorState) -> EditorMOI {
         }
         EditorControlState::Reticule(_pos) => {
             //if the brush shape is a reticule they can move the reticule and place tiles depending on what they've selected
-            if is_key_pressed(KeyCode::Left) || is_key_pressed(KeyCode::Kp4) {
-                //move the reticule left
+            if input.keys_pressed(&[KeyCode::ArrowLeft, KeyCode::Numpad4]) {
                 return EditorMOI::MoveReticule(IVec2::new(-1, 0));
-            } else if is_key_pressed(KeyCode::Up) || is_key_pressed(KeyCode::Kp8) {
-                //move the reticule up
+            } else if input.keys_pressed(&[KeyCode::ArrowUp, KeyCode::Numpad8]) {
                 return EditorMOI::MoveReticule(IVec2::new(0, -1));
-            } else if is_key_pressed(KeyCode::Right) || is_key_pressed(KeyCode::Kp6) {
-                //move the reticule right
+            } else if input.keys_pressed(&[KeyCode::ArrowRight, KeyCode::Numpad6]) {
                 return EditorMOI::MoveReticule(IVec2::new(1, 0));
-            } else if is_key_pressed(KeyCode::Down) || is_key_pressed(KeyCode::Kp2) {
-                //move the reticule down
+            } else if input.keys_pressed(&[KeyCode::ArrowDown, KeyCode::Numpad2]) {
                 return EditorMOI::MoveReticule(IVec2::new(0, 1));
-            } else if is_key_pressed(KeyCode::Key1) {
+            } else if input.key_pressed(KeyCode::Digit1) {
                 //select the wall brushtype
                 state.brush_type = BrushType::Wall;
                 return EditorMOI::None;
-            } else if is_key_pressed(KeyCode::Key2) {
+            } else if input.key_pressed(KeyCode::Digit2) {
                 //select the floor brushtype
                 state.brush_type = BrushType::Floor;
                 return EditorMOI::None;
-            } else if is_key_pressed(KeyCode::Key3) {
+            } else if input.key_pressed(KeyCode::Digit3) {
                 //select the crate brushtype
                 state.brush_type = BrushType::Crate;
                 return EditorMOI::None;
-            } else if is_key_pressed(KeyCode::Key4) {
-                //select the loading zone brushtype
+            } else if input.key_pressed(KeyCode::Digit4) {
                 state.brush_type = BrushType::LoadingZone;
                 return EditorMOI::None;
-            } else if is_key_pressed(KeyCode::Key5) {
-                //select the player brushtype
+            } else if input.key_pressed(KeyCode::Digit5) {
                 state.brush_type = BrushType::Player;
                 return EditorMOI::None;
-            } else if is_key_pressed(KeyCode::Enter) || is_key_pressed(KeyCode::KpEnter) {
-                //paint the selected brushtype onto the position of the reticule
+            } else if input.keys_pressed(&[KeyCode::Enter, KeyCode::NumpadEnter]) {
                 return EditorMOI::PaintTile;
-            } else if is_key_pressed(KeyCode::Escape) {
+            } else if input.key_pressed(KeyCode::Escape) {
                 state.control_state = EditorControlState::Root;
                 return EditorMOI::None;
                 //go from the reticule brushshape and back to None
@@ -65,8 +57,7 @@ pub fn system(state: &mut EditorState) -> EditorMOI {
             }
         }
         EditorControlState::Saving => {
-            if is_key_pressed(KeyCode::Enter) || is_key_pressed(KeyCode::KpEnter) {
-                //if the user pressed enter try to save it
+            if input.keys_pressed(&[KeyCode::Enter, KeyCode::NumpadEnter]) {
                 return EditorMOI::Save;
             } else {
                 return EditorMOI::None;

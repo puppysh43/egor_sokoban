@@ -1,4 +1,4 @@
-use macroquad::math::IVec2;
+use egor::math::IVec2;
 
 use crate::prelude::*;
 

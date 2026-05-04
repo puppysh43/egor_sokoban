@@ -1,33 +1,30 @@
 use crate::game_systems::MessageOfIntent;
-use crate::prelude::*;
-use macroquad::prelude::*;
+use egor::input::*;
+use egor::math::IVec2;
 
-pub fn system() -> MessageOfIntent {
-    //instead of needing to capture the keypress from the context extract it and run it through a match statement
-    //macroquad is able to detect input with a function you can incorporate as part of a giant if/if else chain
-
-    if is_key_pressed(KeyCode::Left) && is_key_down(KeyCode::LeftControl)
-        || is_key_pressed(KeyCode::Left) && is_key_down(KeyCode::RightControl)
+pub fn system(input: &mut &Input) -> MessageOfIntent {
+    if input.all_keys_pressed(&[KeyCode::ArrowLeft, KeyCode::ControlLeft])
+        || input.all_keys_pressed(&[KeyCode::ArrowLeft, KeyCode::ControlRight])
     {
         return MessageOfIntent::Rewind;
-    } else if is_key_pressed(KeyCode::Right) && is_key_down(KeyCode::LeftControl)
-        || is_key_pressed(KeyCode::Right) && is_key_down(KeyCode::RightControl)
+    } else if input.all_keys_pressed(&[KeyCode::ArrowRight, KeyCode::ControlLeft])
+        || input.all_keys_pressed(&[KeyCode::ArrowRight, KeyCode::ControlRight])
     {
         return MessageOfIntent::Forward;
-    } else if is_key_pressed(KeyCode::Left) || is_key_pressed(KeyCode::Kp4) {
+    } else if input.keys_pressed(&[KeyCode::ArrowLeft, KeyCode::Numpad4]) {
         return MessageOfIntent::MovePlayer(IVec2::new(-1, 0));
-    } else if is_key_pressed(KeyCode::Right) || is_key_pressed(KeyCode::Kp6) {
+    } else if input.keys_pressed(&[KeyCode::ArrowRight, KeyCode::Numpad6]) {
         return MessageOfIntent::MovePlayer(IVec2::new(1, 0));
-    } else if is_key_pressed(KeyCode::Up) || is_key_pressed(KeyCode::Kp8) {
+    } else if input.keys_pressed(&[KeyCode::ArrowUp, KeyCode::Numpad8]) {
         return MessageOfIntent::MovePlayer(IVec2::new(0, -1));
-    } else if is_key_pressed(KeyCode::Down) || is_key_pressed(KeyCode::Kp2) {
+    } else if input.keys_pressed(&[KeyCode::ArrowDown, KeyCode::Numpad2]) {
         return MessageOfIntent::MovePlayer(IVec2::new(0, 1));
-    } else if is_key_pressed(KeyCode::Q) && is_key_down(KeyCode::LeftControl)
-        || is_key_pressed(KeyCode::Q) && is_key_down(KeyCode::RightControl)
+    } else if input.all_keys_pressed(&[KeyCode::KeyQ, KeyCode::ControlLeft])
+        || input.keys_pressed(&[KeyCode::KeyQ, KeyCode::ControlRight])
     {
         return MessageOfIntent::Quit;
-    } else if is_key_pressed(KeyCode::R) && is_key_down(KeyCode::LeftControl)
-        || is_key_pressed(KeyCode::R) && is_key_down(KeyCode::RightControl)
+    } else if input.all_keys_pressed(&[KeyCode::KeyR, KeyCode::ControlLeft])
+        || input.all_keys_pressed(&[KeyCode::KeyR, KeyCode::ControlRight])
     {
         return MessageOfIntent::Reset;
     } else {

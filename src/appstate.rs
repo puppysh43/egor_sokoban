@@ -1,9 +1,13 @@
 // use serde::{Deserialize, Serialize};
-use crate::editorstate::EditorState;
-use crate::gamestate::GameState;
+use crate::editorstate::*;
+use crate::gamestate::*;
+use crate::map::*;
+use crate::prelude::*;
 use egor::input::Input;
+use egor::math::{IVec2, Vec2};
 use egor::render::{Color, Graphics};
 use std::collections::HashMap;
+
 pub struct AppState {
     app_mode: AppMode,
     current_campaign_level: i32,
@@ -27,6 +31,19 @@ impl AppState {
             gamestate: GameState::new(),
         }
     }
+    ///create an appstate that will immediately launch into a sokoban game
+    pub fn test() -> Self {
+        let texture_atlas: HashMap<String, usize> = HashMap::new();
+        AppState {
+            app_mode: AppMode::Game(GameMode::Campaign),
+            current_campaign_level: 2,
+            max_campaign_level: 2,
+            custom_level: None,
+            texture_atlas,
+            editorstate: EditorState::new(),
+            gamestate: GameState::from_file("/levels/campaign/2.txt".to_string()),
+        }
+    }
     ///function to make building the texture atlas more ergonomic
     pub fn add_texture(&mut self, name: &str, id: usize) {
         self.texture_atlas.insert(name.to_string(), id);
@@ -41,14 +58,14 @@ impl AppState {
     ///add egui support later
     pub fn update(&mut self, input: &mut &Input) {
         match self.app_mode {
-            AppMode::Game(gamemode) => {
-                //run the gamestate update function
+            AppMode::Game(_) => {
+                crate::game_systems::run_systems(&mut self.gamestate, input);
             }
             AppMode::Menu(menumode) => {
-                //run the menu update function for the app
+                //
             }
             AppMode::Editor => {
-                //run the editor update function.
+                crate::editor_systems::run_systems(&mut self.editorstate, input);
             }
         }
     }
@@ -62,14 +79,14 @@ impl AppState {
                 //
             }
             AppMode::Editor => {
-                //
+                self.render_editor(gfx);
             }
         }
     }
     fn render_game(&self, gfx: &mut Graphics) {
         //first render the game map
         for y in 0..MAP_HEIGHT {
-            for x in 0..MAP_WIDTHIDTH {
+            for x in 0..MAP_WIDTH {
                 let pt = IVec2::new(x, y);
                 let idx = map_idx(x, y);
                 if self.gamestate.map.in_bounds(pt) {
@@ -130,7 +147,7 @@ impl AppState {
                 }
             }
         }
-        if let EditorControlState::Reticule(pos) = state.control_state {
+        if let EditorControlState::Reticule(pos) = self.editorstate.control_state {
             gfx.rect()
                 .at(Vec2::new(
                     (pos.x * TILE_WIDTH) as f32,

@@ -1,11 +1,9 @@
-use crate::prelude::*;
-use crate::sokoban_state::*;
-use macroquad::audio::*;
-use macroquad::prelude::*;
-
-use super::map_idx;
 use super::TileType;
-pub fn system(state: &mut SokobanState, delta: IVec2) {
+use super::map_idx;
+use crate::gamestate::GameState;
+use crate::prelude::*;
+use egor::math::IVec2;
+pub fn system(state: &mut GameState, delta: IVec2) {
     //get player position
     let player_pos = state.player;
     //calculate the player's new position w/ the delta
@@ -36,12 +34,14 @@ pub fn system(state: &mut SokobanState, delta: IVec2) {
                 if state.map.tiles[map_idx(new_player_pos.x + delta.x, new_player_pos.y + delta.y)]
                     == TileType::LoadingSquare
                 {
-                    play_sound_once(state.sound_atlas.get("crate in spot").unwrap());
+                    //need to figure out different sound solution
+                    // play_sound_once(state.sound_atlas.get("crate in spot").unwrap());
                 }
             } else {
                 state.crates.insert(new_player_pos, moving_crate.unwrap());
                 //do not move the player at all
-                play_sound_once(state.sound_atlas.get("wall collision").unwrap());
+                // need to figure out different sound solution
+                // play_sound_once(state.sound_atlas.get("wall collision").unwrap());
             }
         }
         //if there is no crate being moved just make sure the player can move and move them!
@@ -50,7 +50,8 @@ pub fn system(state: &mut SokobanState, delta: IVec2) {
         has_moved = true;
     } else {
         //if the player can't move at all play the sound for hitting a wall
-        play_sound_once(state.sound_atlas.get("wall collision").unwrap());
+        // sound handled differently
+        // play_sound_once(state.sound_atlas.get("wall collision").unwrap());
     }
     //if the player was able to make a legitimate move then increment the movecount and capture the move made
     if has_moved {

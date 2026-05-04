@@ -1,5 +1,6 @@
 use crate::map::*;
 use crate::prelude::*;
+use egor::input::Input;
 use egor::math::IVec2;
 
 pub struct GameState {
@@ -51,6 +52,9 @@ impl GameState {
     pub fn archive_move(&mut self) {
         self.moves.push(Move::new(self.player, self.crates.clone()));
     }
+    pub fn update(&mut self, input: &mut &Input) {
+        crate::game_systems::run_systems(self, input);
+    }
 }
 
 #[derive(Copy, Debug, PartialEq, Clone)]
@@ -81,7 +85,6 @@ impl Move {
     }
 }
 
-impl SokobanState {}
 use std::fs;
 fn read_data_from_string(path: String) -> (Map, IVec2, HashMap<IVec2, Crate>) {
     //get the raw string from file
@@ -132,7 +135,7 @@ pub fn index_to_point(idx: usize) -> IVec2 {
     IVec2::new(x, y)
 }
 ///takes the current level and loads the relevant gamedata from that file
-pub fn load_campaign_level(gamestate: &mut SokobanState, current_level: i32) {
+pub fn load_campaign_level(gamestate: &mut GameState, current_level: i32) {
     //maybe instead of plain numbers it will have "level_" in front of it but for now it's just numbers
     let path = format!("levels/campaign/{current_level}.txt");
     gamestate.update_from_file(path);

@@ -1,10 +1,10 @@
-use crate::app_state::*;
+use crate::appstate::*;
+use crate::gamestate::*;
 use crate::prelude::*;
-use crate::sokoban_state::*;
-use macroquad::prelude::*;
-use macroquad::ui::*;
 
-pub fn run_systems(app_state: &mut AppState, sokoban_state: &mut SokobanState) {
+pub fn run_systems(app_state: &mut AppState, gamestate: &mut GameState) {
+    //TODO fix this
+    /*
     match app_state.app_mode {
         AppMode::Menu(menu_mode) => {
             match menu_mode {
@@ -74,5 +74,5 @@ pub fn run_systems(app_state: &mut AppState, sokoban_state: &mut SokobanState) {
         _ => {
             //do nothing b/c this is impossible
         }
-    }
+    }*/
 }

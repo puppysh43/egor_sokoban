@@ -1,11 +1,9 @@
-use crate::editor_state::*;
+use crate::editorstate::*;
 use crate::map::map_idx;
 use crate::prelude::*;
-use macroquad::audio::*;
-use macroquad::prelude::*;
+use egor::input::Input;
 
 mod input;
-mod paint_render;
 mod saving;
 
 pub enum EditorMOI {
@@ -14,8 +12,8 @@ pub enum EditorMOI {
     PaintTile,
     Save,
 }
-pub fn run_systems(state: &mut EditorState) {
-    match input::system(state) {
+pub fn run_systems(state: &mut EditorState, input: &mut &Input) {
+    match input::system(state, input) {
         EditorMOI::None => {
             //do nothing I guess
         }
@@ -40,7 +38,8 @@ pub fn run_systems(state: &mut EditorState) {
                     if !existing_player {
                         state.map.tiles[map_idx(pos.x, pos.y)] = state.brush_type.clone();
                     } else {
-                        play_sound_once(state.sound_atlas.get("wall collision").unwrap())
+                        //TODO fix sound
+                        // play_sound_once(state.sound_atlas.get("wall collision").unwrap())
                     }
                 } else {
                     //any other type of tile can occur as many times as needed
@@ -61,13 +60,16 @@ pub fn run_systems(state: &mut EditorState) {
             state.map_name = Some(String::new());
         }
     }
+
+    /*
+    //TODO figure out saving
     //still need to render the screen but also need to properly implement the UI stuff for the saving process
     if state.control_state == EditorControlState::Saving {
         //do the saving rendering and ui and stuff
         saving::system(state);
     } else {
         paint_render::system(state);
-    }
+    }*/
 
     //handle input, moving the cursor, changing the brush type, etc
     //process that input to make changes to the map

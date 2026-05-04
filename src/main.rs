@@ -3,7 +3,6 @@ use egor::app::{
     egui::{Context, Window},
 };
 
-use sokoban_state::*;
 mod prelude {
     pub const MAP_WIDTH: i32 = 19;
     pub const MAP_HEIGHT: i32 = 17;
@@ -29,27 +28,11 @@ mod gamestate;
 mod map;
 mod victory_screen;
 
-/*
-fn window_conf() -> macroquad::conf::Conf {
-    macroquad::conf::Conf {
-        miniquad_conf: macroquad::prelude::Conf {
-            window_title: "Sokoban Soup".to_string(),
-            window_width: WINDOW_WIDTH,
-            window_height: WINDOW_HEIGHT,
-            high_dpi: false,
-            fullscreen: false,
-            sample_count: 1,
-            window_resizable: false,
-            icon: None,
-            ..Default::default()
-        },
-        update_on: Some(UpdateTrigger::default()),
-        default_filter_mode: FilterMode::Nearest,
-    }
-}*/
-
 fn main() {
-    let mut appstate = AppState::new();
+    //normal appstate when everything is working
+    // let mut appstate = AppState::new();
+    //test for the gamemode alone
+    let mut appstate = AppState::test();
     App::new().title("Egor Sokoban").min_size(800, 544).run(
         move |FrameContext {
                   gfx,
@@ -86,6 +69,7 @@ fn main() {
                 );
             }
             appstate.update(input);
+            appstate.render(gfx);
         },
     );
 }
@@ -186,17 +170,3 @@ fn save_world<P: AsRef<Path>>(path: P, world: World) -> Result<()> {
     Ok(())
 }
 */
-
-//old sound atlas function
-
-/*
-async fn make_sound_atlas() -> HashMap<String, Sound> {
-    set_pc_assets_folder("resources");
-    let wall_collision = load_sound("wall.wav").await.unwrap();
-    let crate_in_spot = load_sound("correct.wav").await.unwrap();
-    let sound_atlas = HashMap::from([
-        (String::from("wall collision"), wall_collision),
-        (String::from("crate in spot"), crate_in_spot),
-    ]);
-    return sound_atlas;
-}*/
