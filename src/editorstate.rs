@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use egor::math::IVec2;
 ///This struct will hold all the data needed for the level editor
 #[derive(Clone, Debug)]
 pub struct EditorState {

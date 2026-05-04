@@ -13,7 +13,7 @@ pub struct AppState {
     current_campaign_level: i32,
     max_campaign_level: i32,
     custom_level: Option<String>,
-    texture_atlas: HashMap<String, usize>, //something to keep track of what editor is being selected to load into the editor
+    texture_atlas: HashMap<String, usize>,
     editorstate: EditorState,
     gamestate: GameState,
 }
@@ -41,7 +41,7 @@ impl AppState {
             custom_level: None,
             texture_atlas,
             editorstate: EditorState::new(),
-            gamestate: GameState::from_file("/levels/campaign/2.txt".to_string()),
+            gamestate: GameState::from_file("levels/campaign/2.txt".to_string()),
         }
     }
     ///function to make building the texture atlas more ergonomic
@@ -61,7 +61,7 @@ impl AppState {
             AppMode::Game(_) => {
                 crate::game_systems::run_systems(&mut self.gamestate, input);
             }
-            AppMode::Menu(menumode) => {
+            AppMode::Menu(_menumode) => {
                 //
             }
             AppMode::Editor => {
@@ -75,7 +75,7 @@ impl AppState {
             AppMode::Game(_) => {
                 self.render_game(gfx);
             }
-            AppMode::Menu(menumode) => {
+            AppMode::Menu(_menumode) => {
                 //
             }
             AppMode::Editor => {
@@ -106,7 +106,7 @@ impl AppState {
         }
         //then render the crates
         for crate_pos in self.gamestate.crates.keys() {
-            self.print_tile(gfx, crate_pos.x, crate_pos.y, "crate");
+            self.print_tile(gfx, crate_pos.x, crate_pos.y, "box");
         }
         //then render the player
         self.print_tile(
@@ -116,7 +116,7 @@ impl AppState {
             "player",
         );
     }
-    fn render_menu(&self, gfx: &mut Graphics) {
+    fn render_menu(&self, _gfx: &mut Graphics) {
         //
     }
     fn render_editor(&self, gfx: &mut Graphics) {

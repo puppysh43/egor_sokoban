@@ -2,6 +2,7 @@ use crate::editorstate::*;
 use crate::map::map_idx;
 use crate::prelude::*;
 use egor::input::Input;
+use egor::math::IVec2;
 
 mod input;
 mod saving;

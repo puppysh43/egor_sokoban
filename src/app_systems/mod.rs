@@ -1,8 +1,8 @@
 use crate::appstate::*;
 use crate::gamestate::*;
-use crate::prelude::*;
+// use crate::prelude::*;
 
-pub fn run_systems(app_state: &mut AppState, gamestate: &mut GameState) {
+pub fn run_systems(_app_state: &mut AppState, _gamestate: &mut GameState) {
     //TODO fix this
     /*
     match app_state.app_mode {

@@ -1,3 +1,5 @@
+#[allow(unused_variables)]
+#[allow(unused_imports)]
 use egor::app::{
     App, FrameContext,
     egui::{Context, Window},
@@ -15,10 +17,10 @@ mod prelude {
 }
 
 use crate::appstate::*;
-use crate::prelude::*;
-use editorstate::*;
-use std::fs;
-use std::path::Path;
+// use crate::prelude::*;
+// use editorstate::*;
+// use std::fs;
+// use std::path::Path;
 mod app_systems;
 mod appstate;
 mod editor_systems;

@@ -1,7 +1,7 @@
 use super::TileType;
 use super::map_idx;
-use crate::gamestate::GameState;
-use crate::prelude::*;
+use crate::gamestate::*;
+// use crate::prelude::*;
 use egor::math::IVec2;
 pub fn system(state: &mut GameState, delta: IVec2) {
     //get player position
