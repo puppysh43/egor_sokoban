@@ -159,6 +159,7 @@ impl AppState {
     }
     fn print_tile(&self, gfx: &mut Graphics, x: i32, y: i32, texture: &str) {
         gfx.rect()
+            .size(Vec2::new(32.00, 32.00))
             .at(Vec2::new((x * TILE_WIDTH) as f32, (y * TILE_HEIGHT) as f32))
             .color(Color::WHITE)
             .texture(self.get_texture(texture));
