@@ -3,6 +3,7 @@ use crate::editorstate::*;
 use crate::gamestate::*;
 use crate::map::*;
 use crate::prelude::*;
+use egor::app::egui::*;
 use egor::input::Input;
 use egor::math::{IVec2, Vec2};
 use egor::render::{Color, Graphics};
@@ -56,7 +57,7 @@ impl AppState {
     }
     ///Update the appstate depending on what part of the app is actually active
     ///add egui support later
-    pub fn update(&mut self, input: &mut &Input) {
+    pub fn update(&mut self, input: &mut &Input, ui: &mut &Context) {
         match self.app_mode {
             AppMode::Game(_) => {
                 crate::game_systems::run_systems(&mut self.gamestate, input);

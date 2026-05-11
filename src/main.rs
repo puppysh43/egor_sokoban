@@ -70,7 +70,7 @@ fn main() {
                     gfx.load_texture(include_bytes!("../resources/reticule.png")),
                 );
             }
-            appstate.update(input);
+            appstate.update(input, egui_ctx);
             appstate.render(gfx);
         },
     );
