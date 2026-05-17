@@ -32,9 +32,9 @@ mod victory_screen;
 
 fn main() {
     //normal appstate when everything is working
-    // let mut appstate = AppState::new();
+    let mut appstate = AppState::new();
     //test for the gamemode alone
-    let mut appstate = AppState::test();
+    // let mut appstate = AppState::test();
     App::new().title("Egor Sokoban").min_size(800, 544).run(
         move |FrameContext {
                   gfx,

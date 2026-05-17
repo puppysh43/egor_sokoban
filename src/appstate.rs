@@ -10,7 +10,7 @@ use egor::render::{Color, Graphics};
 use std::collections::HashMap;
 
 pub struct AppState {
-    app_mode: AppMode,
+    pub app_mode: AppMode,
     current_campaign_level: i32,
     max_campaign_level: i32,
     custom_level: Option<String>,
@@ -63,7 +63,7 @@ impl AppState {
                 crate::game_systems::run_systems(&mut self.gamestate, input);
             }
             AppMode::Menu(_menumode) => {
-                //
+                crate::app_systems::run_systems(self, input, ui);
             }
             AppMode::Editor => {
                 crate::editor_systems::run_systems(&mut self.editorstate, input);

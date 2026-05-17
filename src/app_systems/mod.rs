@@ -1,31 +1,52 @@
 use crate::appstate::*;
 use crate::gamestate::*;
 use egor::app::egui::*;
+use egor::input::{Input, KeyCode};
 // use crate::prelude::*;
 
-pub fn run_systems(_app_state: &mut AppState, _gamestate: &mut GameState) {
+pub fn run_systems(appstate: &mut AppState, input: &mut &Input, ui: &mut &Context) {
+    match appstate.app_mode {
+        AppMode::Menu(menumode) => {
+            match menumode {
+                MenuMode::Root => {
+                    CentralPanel::default()..show(ui, |ui| {
+                        ui.label("Sokoban in Egor");
+                        if ui.button("Play Campaign").clicked() {
+                            //set it to the current max level
+                            appstate.app_mode = AppMode::Menu(MenuMode::Campaign(0));
+                        }
+                        if ui.button("Custom Level").clicked() {
+                            appstate.app_mode = AppMode::Menu(MenuMode::CustomLevel);
+                        }
+                        if ui.button("Launch Editor").clicked() {
+                            appstate.app_mode = AppMode::Editor;
+                        }
+                        if ui.button("Quit Game").clicked() {
+                            appstate.app_mode = AppMode::Menu(MenuMode::Quitting);
+                        }
+                    });
+                }
+                MenuMode::Campaign(_) => {
+                    //
+                }
+                MenuMode::CustomLevel => {
+                    //
+                }
+                MenuMode::EditorMenu => {
+                    //
+                }
+                MenuMode::Quitting => {}
+            }
+        }
+        _ => {
+            //do nothing because this is just for the menu
+        }
+    }
     //TODO fix this
     /*
     match app_state.app_mode {
         AppMode::Menu(menu_mode) => {
             match menu_mode {
-                //first screen the app opens to
-                MenuMode::Root => {
-                    //button to take the player to the player to the campaign screen
-                    clear_background(BLUE);
-                    if root_ui().button(Vec2::new(50.0, 50.0), String::from("Play Campaign")) {
-                        //go to the campaign screen with the max level as the currently selected level already
-                        app_state.app_mode =
-                            AppMode::Menu(MenuMode::Campaign(app_state.max_campaign_level));
-                    }
-                    if root_ui().button(Vec2::new(50.0, 100.0), String::from("Launch Editor")) {
-                        //go to the editor launch screen
-                        app_state.app_mode = AppMode::Menu(MenuMode::EditorMenu);
-                    }
-                    if root_ui().button(Vec2::new(50.0, 150.0), "Quit Game") {
-                        app_state.quitting = true;
-                    }
-                }
                 MenuMode::Campaign(current_level) => {
                     //Button that launches the campaign level currently selected
                     if root_ui().button(Vec2::new(50.0, 50.0), String::from("Play Selected Level"))
