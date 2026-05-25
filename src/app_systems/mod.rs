@@ -9,7 +9,7 @@ pub fn run_systems(appstate: &mut AppState, input: &mut &Input, ui: &mut &Contex
         AppMode::Menu(menumode) => {
             match menumode {
                 MenuMode::Root => {
-                    CentralPanel::default()..show(ui, |ui| {
+                    CentralPanel::default().show(ui, |ui| {
                         ui.label("Sokoban in Egor");
                         if ui.button("Play Campaign").clicked() {
                             //set it to the current max level
@@ -27,15 +27,38 @@ pub fn run_systems(appstate: &mut AppState, input: &mut &Input, ui: &mut &Contex
                     });
                 }
                 MenuMode::Campaign(_) => {
-                    //
+                    CentralPanel::default().show(ui, |ui| {
+                        ui.horizontal_centered(|ui| {
+                            if ui.button("<").clicked() {
+                                appstate.dec_campaign_level();
+                            }
+                            ui.label(format!("Level: {}", appstate.current_campaign_level));
+                            if ui.button(">").clicked() {
+                                appstate.inc_campaign_level();
+                            }
+                        });
+                        ui.horizontal_centered(|ui| {
+                            if ui.button("Play Level").clicked() {
+                                //set correct level based on campaign
+                                appstate.app_mode = AppMode::Game(GameMode::Campaign);
+                            }
+                        });
+                    });
+                    //two buttons with a textbox in between to show the current campaign level selected
+                    // max out at max campaign level and can go no higher than the actual level
+                    // then a "play selected level" button
                 }
                 MenuMode::CustomLevel => {
-                    //
+                    //file selector widget to select files from the custom folder
+                    // then a play button
                 }
                 MenuMode::EditorMenu => {
-                    //
+                    //new level or edit existing file
+                    //dialogue box popup for entering file name then switching to the editor
                 }
-                MenuMode::Quitting => {}
+                MenuMode::Quitting => {
+                    //pop up menu confirming if someone is quitting?
+                }
             }
         }
         _ => {

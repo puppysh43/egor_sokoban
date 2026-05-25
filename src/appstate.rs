@@ -11,7 +11,7 @@ use std::collections::HashMap;
 
 pub struct AppState {
     pub app_mode: AppMode,
-    current_campaign_level: i32,
+    pub current_campaign_level: i32,
     max_campaign_level: i32,
     custom_level: Option<String>,
     texture_atlas: HashMap<String, usize>,
@@ -24,8 +24,8 @@ impl AppState {
         let texture_atlas: HashMap<String, usize> = HashMap::new();
         AppState {
             app_mode: AppMode::Menu(MenuMode::Root),
-            current_campaign_level: 0,
-            max_campaign_level: 0,
+            current_campaign_level: 1,
+            max_campaign_level: 1,
             custom_level: None,
             texture_atlas,
             editorstate: EditorState::new(),
@@ -164,6 +164,21 @@ impl AppState {
             .at(Vec2::new((x * TILE_WIDTH) as f32, (y * TILE_HEIGHT) as f32))
             .color(Color::WHITE)
             .texture(self.get_texture(texture));
+    }
+    ///increment the current campaign level by one, ensuring it never
+    ///goes above the current max level or the total number of sokoban levels (50)
+    pub fn inc_campaign_level(&mut self) {
+        if self.current_campaign_level < self.max_campaign_level && self.current_campaign_level < 50
+        {
+            self.current_campaign_level += 1;
+        }
+    }
+    ///decrement the current campaign level by one, ensuring it never goes
+    ///below zero
+    pub fn dec_campaign_level(&mut self) {
+        if self.current_campaign_level > 1 {
+            self.current_campaign_level -= 1;
+        }
     }
 }
 
